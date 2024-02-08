@@ -248,41 +248,58 @@ public class Picture extends SimplePicture
   
   public void pixelate(int size) {
 	  Pixel[][] pixels = this.getPixels2D();
-	  	  
+	  	  	 
 	  for (int i = 0; i < pixels.length; i+=size) {	  
 		  for (int j = 0; j < pixels[i].length; j+=size) {
+			  
+			  int squares = 0;
 			  
 			  int green = 0;
 			  int red = 0;
 			  int blue = 0;
 			  
-			  for (int a = i; a < i+size; a++) {				  
-				  for (int h = j; h < j+size; h++) {
-					  green += pixels[i][j].getGreen();
-					  blue += pixels[i][j].getBlue();
-					  red += pixels[i][j].getRed();
+			  int endRow = i+size;
+			  int endCol = j+size;
+			  
+			  if (endRow > pixels.length) {
+				  endRow = pixels.length;
+			  }
+			  if (endCol > pixels[i].length) {
+				  endCol = pixels[i].length;
+			  }
+			  
+			  for (int a = i; a < endRow; a++) {				  
+				  for (int h = j; h < endCol; h++) {
+					  green += pixels[a][h].getGreen();
+					  blue += pixels[a][h].getBlue();
+					  red += pixels[a][h].getRed();
+					  squares++;
 				  }				  
 			  }
 		  
-			   green = green/(size*size);
-			   red = red/(size*size);
-			   blue = blue/(size*size);
+			   green = green/(squares);
+			   red = red/(squares);
+			   blue = blue/(squares);
 				
-			   for (int b = 0; b < size; b++) {			   
-				   for (int r = 0; r < 3; r++) {		   					    
-					   pixels[i][j].setRed(red);
-					   pixels[i][j].setBlue(blue);
-					   pixels[i][j].setGreen(green);
+			   for (int b = i; b < endRow; b++) {			   
+				   for (int r = j; r < endCol; r++) {		   					    
+					   pixels[b][r].setRed(red);
+					   pixels[b][r].setBlue(blue);
+					   pixels[b][r].setGreen(green);
 					   
 				   }
-				}
+			   }
 	      
 			}
   
+		}
+
 	}
 
-}
-  
+  public void blur(int size) {
+	  
+  }
+	
   public void grayscale() {
 	Pixel[][] pixels = this.getPixels2D();
     for (Pixel[] rowArray : pixels)
@@ -294,14 +311,9 @@ public class Picture extends SimplePicture
         pixelObj.setGreen(color);
         pixelObj.setBlue(color);
         pixelObj.setRed(color);
-
-
-        
       }
-    }
-	  
+    }	  
   }
-  
   
   /* Main method for testing - each class in Java can have a main 
    * method 
