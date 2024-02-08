@@ -73,9 +73,15 @@ public class PictureTester
   public static void testPixelate() {
 	  
 	  Picture swan = new Picture("images/swan.jpg");
-	  swan.pixelate(11);
+	  swan.pixelate(10);
 	  swan.explore();
 	  
+  }
+  
+  public static void testBlur() {
+	  Picture beach = new Picture("images/beach.jpg");
+	  beach.blur();
+	  beach.explore();
   }
   
   /** Main method for testing.  Every class can have a main
@@ -96,7 +102,8 @@ public class PictureTester
     //testNegate(); ***
    // testGrayscale(); ***
     
-    testPixelate();
+   // testPixelate();
+    testBlur();
     
     //testFixUnderwater();
    // testMirrorVertical();
