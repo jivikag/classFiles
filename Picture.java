@@ -364,7 +364,36 @@ public Picture enhance(int size) {
 
   return result;
 
+}
 
+public Picture shiftRight(int percent) {
+	
+  Pixel[][] pixels = this.getPixels2D();
+  Picture result = new Picture(pixels.length, pixels[0].length);
+  Pixel[][] resultPixels = result.getPixels2D();
+  
+  int section = (int)(percent*0.01*pixels[0].length);
+  
+  for (int i = 0; i < pixels.length; i++) {
+	  
+	  for (int j = 0; j < section; j++) {
+		  
+		  resultPixels[i][j] = pixels[i][j];
+		  
+	  }
+	  
+  }
+  
+  for (int a = 0; a <pixels.length; a++) {
+	  
+	for (int b = section; b < pixels[0].length; b++) {
+		resultPixels[a][b] = pixels[a][b];
+	}
+	
+  }
+  
+  return result;
+  
 }
 
   public void grayscale() {
