@@ -248,58 +248,125 @@ public class Picture extends SimplePicture
   
   public void pixelate(int size) {
 	  Pixel[][] pixels = this.getPixels2D();
-	  	  	 
+	  	  
 	  for (int i = 0; i < pixels.length; i+=size) {	  
 		  for (int j = 0; j < pixels[i].length; j+=size) {
-			  
-			  int squares = 0;
 			  
 			  int green = 0;
 			  int red = 0;
 			  int blue = 0;
 			  
-			  int endRow = i+size;
-			  int endCol = j+size;
-			  
-			  if (endRow > pixels.length) {
-				  endRow = pixels.length;
-			  }
-			  if (endCol > pixels[i].length) {
-				  endCol = pixels[i].length;
-			  }
-			  
-			  for (int a = i; a < endRow; a++) {				  
-				  for (int h = j; h < endCol; h++) {
-					  green += pixels[a][h].getGreen();
-					  blue += pixels[a][h].getBlue();
-					  red += pixels[a][h].getRed();
-					  squares++;
+			  for (int a = i; a < i+size; a++) {				  
+				  for (int h = j; h < j+size; h++) {
+					  green += pixels[i][j].getGreen();
+					  blue += pixels[i][j].getBlue();
+					  red += pixels[i][j].getRed();
 				  }				  
 			  }
 		  
-			   green = green/(squares);
-			   red = red/(squares);
-			   blue = blue/(squares);
+			   green = green/(size*size);
+			   red = red/(size*size);
+			   blue = blue/(size*size);
 				
-			   for (int b = i; b < endRow; b++) {			   
-				   for (int r = j; r < endCol; r++) {		   					    
-					   pixels[b][r].setRed(red);
-					   pixels[b][r].setBlue(blue);
-					   pixels[b][r].setGreen(green);
+			   for (int b = 0; b < size; b++) {			   
+				   for (int r = 0; r < 3; r++) {		   					    
+					   pixels[i][j].setRed(red);
+					   pixels[i][j].setBlue(blue);
+					   pixels[i][j].setGreen(green);
 					   
 				   }
-			   }
+				}
 	      
 			}
   
-		}
-
 	}
 
-  public void blur(int size) {
-	  
+}
+
+public Picture blur(int size) {
+  Pixel[][] pixels = this.getPixels2D();
+
+  Picture result = new Picture(pixels.length, pixels[0].length);
+  Pixel[][] resultPixels = result.getPixels2D();
+
+  for (int i = 0; i < pixels.length; i++) {
+    for (int j = 0; j < pixels[i].length; j++) {
+      int rowMin = Math.max(0, i-size/2);
+      int rowMax = Math.min(pixels.length, i+size/2);
+      int colMin = Math.max(0, j-size/2);
+      int colMax = Math.min(pixels[i].length, j+size/2);
+
+      int avgRed = 0;
+      int avgBlue = 0;
+      int avgGreen = 0;
+      int count = 0;
+
+      for (int a = rowMin; a < rowMax; a++)  {
+        for (int b = colMin; b < colMax; b++) {
+          avgRed += pixels[a][b].getRed();
+          avgBlue += pixels[a][b].getBlue();
+          avgGreen += pixels[a][b].getGreen();
+
+          count++;
+        }
+      }
+
+      avgRed /= count;
+      avgBlue /= count;
+      avgGreen /= count;
+
+      resultPixels[i][j].setRed(avgRed);
+      resultPixels[i][j].setBlue(avgBlue);
+      resultPixels[i][j].setGreen(avgGreen);
+
+    }
   }
-	
+
+  return result;
+
+}
+
+public Picture enhance(int size) {
+  Pixel[][] pixels = this.getPixels2D();
+  Picture result = new Picture(pixels.length, pixels[0].length);
+  Pixel[][] resultPixels = result.getPixels2D();
+
+   for (int i = 0; i < pixels.length; i++) {
+    for (int j = 0; j < pixels[i].length; j++) {
+      int rowMin = Math.max(0, i-size/2);
+      int rowMax = Math.min(pixels.length, i+size/2);
+      int colMin = Math.max(0, j-size/2);
+      int colMax = Math.min(pixels[i].length, j+size/2);
+
+      int avgRed = 0;
+      int avgBlue = 0;
+      int avgGreen = 0;
+
+      for (int a = rowMin; a < rowMax; a++)  {
+        for (int b = colMin; b < colMax; b++) {
+          avgRed += pixels[a][b].getRed();
+          avgBlue += pixels[a][b].getBlue();
+          avgGreen += pixels[a][b].getGreen();
+
+        }
+      }
+
+      avgRed = 2*resultPixels[i][j].getRed()-avgRed;
+      avgBlue = 2*resultPixels[i][j].getBlue()-avgBlue;
+      avgGreen = 2*resultPixels[i][j].getGreen()-avgGreen;
+
+      resultPixels[i][j].setRed(avgRed);
+      resultPixels[i][j].setBlue(avgBlue);
+      resultPixels[i][j].setGreen(avgGreen);
+
+    }
+  }
+
+  return result;
+
+
+}
+
   public void grayscale() {
 	Pixel[][] pixels = this.getPixels2D();
     for (Pixel[] rowArray : pixels)
@@ -311,9 +378,14 @@ public class Picture extends SimplePicture
         pixelObj.setGreen(color);
         pixelObj.setBlue(color);
         pixelObj.setRed(color);
+
+
+        
       }
-    }	  
+    }
+	  
   }
+  
   
   /* Main method for testing - each class in Java can have a main 
    * method 
