@@ -95,6 +95,15 @@ public class PictureTester
 
   }
   
+  public static void testShiftRight() {
+	  Picture motorcycle = new Picture("images/redMotorcycle.jpg");
+	  motorcycle.explore();
+	  Picture result = motorcycle.shiftRight(11);
+      result.explore();
+
+	  
+  }
+  
   /** Main method for testing.  Every class can have a main
     * method in Java */
   public static void main(String[] args)
@@ -115,7 +124,9 @@ public class PictureTester
     
     //testPixelate();
    // testBlur();
-   testEnhance();
+  // testEnhance();
+  
+  testShiftRight();
     
     //testFixUnderwater();
    // testMirrorVertical();
